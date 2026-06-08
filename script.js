@@ -5,3 +5,10 @@ function applyJob() {
 function contactUs() {
     alert("Your message has been received.");
 }
+function logout() {
+    localStorage.removeItem("email");
+    localStorage.removeItem("password");
+
+    alert("Logged Out Successfully");
+}
+
