@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course managment </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-200">
+<section class="max-w-5xl mx-auto px-5 py-10">
+    <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Job add view delete</h1>
+    <div class="bg-white p-6 rounded-2xl shadow-lg mt-5">
+        <input
+        type="text"
+        id="jobTitle"
+        placeholder="Enter Job Title"
+        class="w-full border p-3 rounded-lg mb-4"
+        >
+
+        <input type="text" id="companyName" placeholder="Enter Company Name" class="w-full border p-3 rounded-lg mb-4">
+        <input type="text" id="salary" placeholder="Enter Salary" class="w-full border p-3 rounded-lg mb-4">
+
+
+        <button onclick="addJob()" class="bg-blue-600 text-white px-6 py-3 rounded-lg w-full">
+            Add Job
+        </button>
+    </div>
+
+   <div id ="courseList" class="grid grid-cols-1 md:grid-cols-3  gap-6">
+
+   </div>
+
+</section>
+<script>
+    let jobs = JSON.parse(localStorage.getItem("jobs"))||[];
+
+function addJob(){
+
+    let jobTitle = document.getElementById("jobTitle").value;
+    let companyName = document.getElementById("companyName").value;
+    let salary = document.getElementById("salary").value;
+
+    if(jobTitle === "" || companyName === "" || salary === ""){
+        alert("Please fill all fields");
+        return;
+    }
+
+    let job = {
+        id: Date.now(),
+        title: jobTitle,
+        company: companyName,
+        salary: salary
+    };
+
+    jobs.push(job);
+
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+
+    document.getElementById("jobTitle").value = "";
+    document.getElementById("companyName").value = "";
+    document.getElementById("salary").value = "";
+
+    showJobs();
+}
+
+     function showJobs(){
+
+    let jobList = document.getElementById("courseList");
+
+    jobList.innerHTML = "";
+
+    jobs.forEach(function(job){
+
+        jobList.innerHTML += `
+
+        <div class="bg-white rounded-2xl shadow-lg p-5">
+
+            <h2 class="text-2xl font-bold">
+                ${job.title}
+            </h2>
+
+            <p>
+                Company: ${job.company}
+            </p>
+
+            <p>
+                Salary: ${job.salary}
+            </p>
+
+            <button
+            onclick="viewJob(${job.id})"
+            class="bg-green-600 text-white w-full py-2 rounded-lg mt-3">
+            View Details
+            </button>
+
+            <button
+            onclick="deleteJob(${job.id})"
+            class="bg-red-600 text-white w-full py-2 rounded-lg mt-3">
+            Delete
+            </button>
+
+        </div>
+
+        `;
+    });
+}
+function viewJob(id){
+
+    let job = jobs.find(function(item){
+        return item.id === id;
+    });
+
+    alert(
+        "Job Title: " + job.title +
+        "\nCompany: " + job.company +
+        "\nSalary: " + job.salary
+    );
+}
+
+    function deleteJob(id){
+
+    jobs = jobs.filter(function(job){
+        return job.id !== id;
+    });
+
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+
+    showJobs();
+}
+showJobs();
+</script>
+    
+</body>
+</html>

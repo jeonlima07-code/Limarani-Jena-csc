@@ -22,3 +22,25 @@ button {
 button:hover {
   opacity: 0.8;
 }
+body{
+    background-color: lightgray;
+}
+
+h1{
+    color: blue;
+    text-align: center;
+}
+
+button{
+    background-color: blue;
+    color: white;
+    padding: 10px;
+    border: none;
+}
+
+#courseList div{
+    background-color: white;
+    padding: 15px;
+    margin-top: 10px;
+    border: 1px solid gray;
+}
