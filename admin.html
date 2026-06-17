@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-200">
 <section class="max-w-5xl mx-auto px-5 py-10">
-    <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Job add view delete</h1>
+    <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Job Add View Delete + Save Job</h1>
     <div class="bg-white p-6 rounded-2xl shadow-lg mt-5">
         <input
         type="text"
@@ -30,9 +30,20 @@
 
    </div>
 
+<h2 class="text-2xl font-bold mt-5">Saved Jobs</h2>
+
+<div id="cartList" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+
+<h2 id="totalSalary"></h2>
+
+<button onclick="applyJobs()" class="bg-green-600 text-white px-6 py-3 rounded-lg mt-3">
+    Apply Jobs
+</button>
 </section>
 <script>
     let jobs = JSON.parse(localStorage.getItem("jobs"))||[];
+    let cart = JSON.parse(localStorage.getItem("cart"))||[];
+    console.log(cart);
 
 function addJob(){
 
@@ -94,8 +105,14 @@ function addJob(){
             </button>
 
             <button
-            onclick="deleteJob(${job.id})"
+            onclick="addToCart(${job.id})"
             class="bg-red-600 text-white w-full py-2 rounded-lg mt-3">
+            Save Job
+            </button>
+
+            <button
+            onclick="deleteJob(${job.id})"
+            class="bg-blue-600 text-white w-full py-2 rounded-lg mt-3">
             Delete
             </button>
 
@@ -127,7 +144,91 @@ function viewJob(id){
 
     showJobs();
 }
+
+function addToCart(id){
+    alert("Save Job Clicked");
+
+    let job = jobs.find(function(item){
+        return item.id === id;
+    });
+
+    let exist = cart.find(function(item){
+        return item.id === id;
+    });
+
+    if(exist){
+        alert("Job already saved");
+        return;
+    }
+
+    cart.push(job);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    showCart();
+}
+
+function showCart(){
+
+    let cartList = document.getElementById("cartList");
+    let totalSalary = document.getElementById("totalSalary");
+
+    cartList.innerHTML = "";
+
+    if(cart.length === 0){
+        cartList.innerHTML = "<p>No saved jobs</p>";
+        totalSalary.innerText = "Total Salary: 0";
+        return;
+    }
+
+    let total = 0;
+
+    cart.forEach(function(item){
+
+        total += Number(item.salary);
+
+        cartList.innerHTML += `
+        <div class="bg-white rounded-2xl shadow-lg p-5">
+
+            <h2 class="text-2xl font-bold">
+                ${item.title}
+            </h2>
+
+            <p>
+                Company: ${item.company}
+            </p>
+
+            <p>
+                Salary: ${item.salary}
+            </p>
+
+            <button
+            onclick="removeCart(${item.id})"
+            class="bg-red-600 text-white w-full py-2 rounded-lg mt-3">
+            Remove
+            </button>
+
+        </div>
+        `;
+    });
+
+    totalSalary.innerText = "Total Salary: " + total;
+}
+function removeCart(id){
+
+    cart = cart.filter(function(item){
+        return item.id !== id;
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    showCart();
+}
+function applyJobs(){
+    alert("Jobs Applied Successfully");
+}
 showJobs();
+showCart();
 </script>
     
 </body>
